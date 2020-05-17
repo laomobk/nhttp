@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 
-from .writer import ResponseWriter
+from .resp_writer import ResponseWriter
 from .req_info import Request
 
 

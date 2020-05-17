@@ -1,7 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 from .mux import ServerMux, MuxEntry
-from .writer import ResponseWriter
+from .resp_writer import ResponseWriter
 from .req_info import Request
 
 __mux = ServerMux()
