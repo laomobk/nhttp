@@ -1,10 +1,10 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, ThreadingHTTPServer
 
 from .mux import ServerMux, MuxEntry
 from .resp_writer import ResponseWriter
 from .req_info import Request
 
-__mux = ServerMux()
+__mux = ServerMux
 __http_server :HTTPServer = None
 
 
@@ -35,12 +35,15 @@ def listen_and_service(address :str):
 
     except ValueError:
         raise ValueError('Invalid address: \'%s\'')
-
-    __http_server = HTTPServer(addr, __mux)
+    
+    __http_server = ThreadingHTTPServer(addr, __mux)
 
     print('Serve HTTP at (%s : %s)' % addr)
-
-    __http_server.serve_forever()
+    
+    try:
+        __http_server.serve_forever()
+    except KeyboardInterrupt:
+        print('Keyboard interrupt')
 
 
 __all__ = [

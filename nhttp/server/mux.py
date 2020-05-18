@@ -1,6 +1,6 @@
 import threading
 
-from http.server import BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler
 
 from .resp_writer import ResponseWriter
 from .req_info import Request
@@ -17,16 +17,17 @@ class MuxEntry:
 
 
 class ServerMux(BaseHTTPRequestHandler):
-    def __init__(self):
-        self.__handlers = []
-
+    __handlers = []
+    
+    @classmethod
     def set_handle_func(self, pattern :str, handle_func :str):
         m = MuxEntry(pattern, handle_func)
         self.__handlers.append(m)
-
+    
+    @classmethod
     def set_handler(self, entry :MuxEntry):
         self.__handler.append(entry)
-
+    
     def __find_handler(self, pattern :str) -> MuxEntry:
         for e in self.__handlers:
             if e.pattern == pattern:
@@ -53,6 +54,3 @@ class ServerMux(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.__do_request('POST')
-
-    def __call__(self, *req_info):
-        super().__init__(*req_info)
