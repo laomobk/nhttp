@@ -53,12 +53,18 @@ class Request:
         try:
 
             length = int(self.__base_handler.headers['Content-Length'])
-            cont_type_and_chset = self.__base_handler.headers['Content-Type']
 
-             
+            chset = self.headers.get_charset()
+            cont_type = self.headers.get_content_type()
 
-            self.__raw_content = self.__base_handler.rfile.read(length)
+            if chset is not None:
+                self.__content_charset = chset
 
-        except KeyError:
+            if cont_type is not None:
+                self.__content_type = cont_type
+
+            self.__raw_content = self.__base_handler.rfile.read(length).decode(self.__content_charset)
+
+        except (KeyError, TypeError):
             # TODO log.
             pass

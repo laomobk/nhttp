@@ -1,3 +1,5 @@
+import threading
+
 from http.server import BaseHTTPRequestHandler
 
 from .resp_writer import ResponseWriter
@@ -40,7 +42,10 @@ class ServerMux(BaseHTTPRequestHandler):
 
         respw = ResponseWriter(self)
         req = Request(self, method)
-
+        
+        # handle_thread = threading.Thread(
+        #        target=handler.serve_http, args=(respw, req))
+        # handle_thread.setDaemon(True)
         handler.serve_http(respw, req)
 
     def do_GET(self):

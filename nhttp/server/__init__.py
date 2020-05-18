@@ -30,12 +30,16 @@ def handle(pattern :str):
 def listen_and_service(address :str):
     try:
         ip, port = address.split(':', 1)
+
         addr = (ip, int(port))
 
     except ValueError:
         raise ValueError('Invalid address: \'%s\'')
 
     __http_server = HTTPServer(addr, __mux)
+
+    print('Serve HTTP at (%s : %s)' % addr)
+
     __http_server.serve_forever()
 
 

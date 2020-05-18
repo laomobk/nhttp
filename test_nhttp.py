@@ -1,4 +1,5 @@
 from nhttp.server import *
+import time
 
 
 _html_source = '''
@@ -28,6 +29,13 @@ def say_hello(w :ResponseWriter, r :Request):
         content=r.raw_content
 
         ))
+
+
+@handle('/red')
+def handle_redirect(w :ResponseWriter, _):
+    w.send_respone(301)
+    w.send_header({'location': '/'})
+
 
 listen_and_service(':5013')
 
