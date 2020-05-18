@@ -22,3 +22,6 @@ class ResponseWriter:
 
     def write(self, text :str, encoding='UTF-8'):
         self.__base_handler.wfile.write(text.encode(encoding))
+
+    def write_bytes(self, b :bytes):
+        self.__base_handler.wfile.write(b)
