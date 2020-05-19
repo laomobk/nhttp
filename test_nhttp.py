@@ -31,10 +31,24 @@ def say_hello(w :ResponseWriter, r :Request):
         ))
 
 
-@handle('/red')
+@handle('/red/')
 def handle_redirect(w :ResponseWriter, _):
     w.send_respone(301)
     w.send_header({'location': '/'})
+
+
+@handle('/host')
+def handle_host(w :ResponseWriter, r :Request):
+    w.send_respone(200)
+    w.send_header({'Content-type': 'text/html'})
+    w.write('here is /host')
+
+
+@handle('/host/')
+def handle_host(w :ResponseWriter, r :Request):
+    w.send_respone(200)
+    w.send_header({'Content-type': 'text/html'})
+    w.write('here is /host/')
 
 
 listen_and_service(':5013')

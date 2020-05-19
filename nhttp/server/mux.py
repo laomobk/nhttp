@@ -4,35 +4,48 @@ from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler
 
 from .resp_writer import ResponseWriter
 from .req_info import Request
+from .handler import Handler, FuncHandler, RedirectHandler
 
+from ..exceptions import MultipleRegistrationException
 
 class MuxEntry:
-    def __init__(self, pattern :str, handle_func=None):
+    def __init__(self, pattern :str, handler :Handler):
         self.pattern = pattern
-        self.__handler = handle_func
-
-    def serve_http(self, respone_writer :ResponseWriter, request :Request):
-        if self.__handler is not None:
-            return self.__handler(respone_writer, request)
+        self.handler = handler
 
 
 class ServerMux(BaseHTTPRequestHandler):
-    __handlers = []
+    __entry_map = {}
     
     @classmethod
     def set_handle_func(self, pattern :str, handle_func :str):
-        m = MuxEntry(pattern, handle_func)
-        self.__handlers.append(m)
+        h = FuncHandler(handle_func)
+        
+        self.set_handler(pattern, h)
     
     @classmethod
-    def set_handler(self, entry :MuxEntry):
-        self.__handler.append(entry)
+    def set_handler(self, pattern :str, handler :Handler):
+        if pattern in self.__entry_map:
+            raise MultipleRegistrationException()
+
+        m = MuxEntry(pattern, handler)
+
+        self.__entry_map[pattern] = m
+        
+        # redirect to pattern
+        if pattern != '/' and pattern[-1] == '/' \
+                and pattern[:-1] not in self.__entry_map:
+            sp = pattern[:-1]
+            
+            self.__entry_map[sp] = MuxEntry(
+                    sp, RedirectHandler(pattern))
     
-    def __find_handler(self, pattern :str) -> MuxEntry:
-        for e in self.__handlers:
-            if e.pattern == pattern:
-                return e
-        return None
+    def __find_handler(self, pattern :str) -> Handler:
+        m = self.__entry_map.get(pattern, None)
+
+        if m is None:
+            return None
+        return m.handler
 
     def __do_request(self, method :str):
         handler = self.__find_handler(self.path)
