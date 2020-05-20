@@ -41,11 +41,36 @@ class ServerMux(BaseHTTPRequestHandler):
                     sp, RedirectHandler(pattern))
     
     def __find_handler(self, pattern :str) -> Handler:
+        pattern, *_ = pattern.split('?')  # Remove query part
+
         m = self.__entry_map.get(pattern, None)
 
         if m is None:
-            return None
+            return self.__find_best_match_handler(pattern)
+
         return m.handler
+
+    def __find_best_match_handler(self, path :str):
+        max_length = 0
+        target_handler = None
+
+        for k, v in self.__entry_map.items():
+            if not self.__is_match(k, path):
+                continue
+
+        if max_length < len(k):
+            max_length = len(k)
+            target_handler = v.handler
+
+        return target_handler
+
+    def __is_match(self, pattern :str, path :str) -> bool:
+        if pattern[-1] != '/':
+            return pattern == path
+
+        l = len(pattern)
+
+        return path[:l] == pattern and len(path) >= l
 
     def __do_request(self, method :str):
         handler = self.__find_handler(self.path)

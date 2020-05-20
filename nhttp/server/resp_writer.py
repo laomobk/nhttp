@@ -9,6 +9,10 @@ class ResponseWriter:
     def resp_file(self):
         return self.__base_handler.wfile
 
+    @property
+    def _base_handler(self):
+        return self.__base_handler
+
     def send_respone(self, code :int):
         self.__base_handler.send_response(code)
 

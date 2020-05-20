@@ -3,6 +3,7 @@ from .server import NHTTPThreadingHTTPServer
 from .mux import ServerMux, MuxEntry
 from .resp_writer import ResponseWriter
 from .req_info import Request
+from .handler import Handler
 
 __mux = ServerMux
 __http_server = None
@@ -12,8 +13,8 @@ def set_handle_func(pattern :str, handler_func):
     __mux.set_handle_func(pattern, handler_func)
 
 
-def set_handler(entry :MuxEntry):
-    __mux.set_handler(entry)
+def set_handler(pattern :str, handler :Handler):
+    __mux.set_handler(pattern, handler)
 
 
 def handle(pattern :str):

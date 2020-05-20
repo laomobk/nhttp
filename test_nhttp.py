@@ -5,12 +5,13 @@ import time
 _html_source = '''
 <h1> Hello Nezha from NHTTP </h1>
 </br>
-<h2> URI: {uri} </h2>
+<h2> URL: {url} </h2>
+<h2> Query: {query} </h2>
 <h2> Method: {method} </h2>
 <h2> Headers: </h2>
 {headers}
-<hr/>
-<h1> content </h1>
+<br/>
+<h1> Content </h1>
 {content}
 '''
 
@@ -22,11 +23,12 @@ def say_hello(w :ResponseWriter, r :Request):
 
     w.write(_html_source.format(
 
-        uri=r.uri,
+        url=r.url,
+        query=str(r.query_dict),
         method=r.method,
         headers=''.join(['<h3>%s : %s</h3>' % (k, v) 
                 for k, v in r.headers.items()]),
-        content=r.raw_content
+        content=str(r.raw_content)
 
         ))
 
@@ -49,6 +51,13 @@ def handle_host(w :ResponseWriter, r :Request):
     w.send_respone(200)
     w.send_header({'Content-type': 'text/html'})
     w.write('here is /host/')
+
+
+@handle('/a/')
+def handle_host(w :ResponseWriter, r :Request):
+    w.send_respone(200)
+    w.send_header({'Content-type': 'text/html'})
+    w.write('here is a')
 
 
 listen_and_service(':5013')

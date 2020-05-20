@@ -9,3 +9,4 @@ class MuxException(Exception):
 
 class MultipleRegistrationException(MuxException):
     pass
+
