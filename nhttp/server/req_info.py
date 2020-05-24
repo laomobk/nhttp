@@ -79,9 +79,9 @@ class Request:
                 continue
 
             k, v = eq.split('=', 1)
-            qd[k] = v
+            qd[unquote(k)] = unquote(v)
 
-        return unquote(url), unquote(qd)
+        return unquote(url), qd
 
     def get_header(self, key :str):
         for k, v in self.__base_handler.headers.items():

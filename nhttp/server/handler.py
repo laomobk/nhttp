@@ -3,6 +3,7 @@ from urllib.parse import quote, unquote
 
 from .req_info import Request
 from .resp_writer import ResponseWriter
+from ..content_type import content_type_manager
 
 
 class Handler:
@@ -96,6 +97,11 @@ class FileServerHandler(Handler):
     def __safe_text(self, text :str) -> str:
         return text.replace(' ', '%20')
 
+    def __get_content_type(self, fpath :str) -> str:
+        _, fext = os.path.splitext(fpath)
+
+        return content_type_manager.get(fext) 
+
     def __handle_dir(self, w :ResponseWriter, rpath :str):
         w.send_respone(200)
         w.send_header({'content-type': 'text/html'})
@@ -110,7 +116,7 @@ class FileServerHandler(Handler):
 
     def __handle_file(self, w :ResponseWriter, rpath :str):
         w.send_respone(200)
-        w.send_header({'content-type': '*/*'})
+        w.send_header({'content-type': self.__get_content_type(rpath)})
         w.write_bytes(self.__make_file_content(rpath))
 
     def __make_file_content(self, path :str) -> bytes:
