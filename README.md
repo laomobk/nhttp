@@ -14,7 +14,7 @@ from nhttp.server import *
 from nhttp.server.handler import HelloWorldHandler
 
 
-set_handler('/', HelloWorldHandler)
+set_handler('/', HelloWorldHandler())
 listen__and_serve(':5013')
 ```
 
