@@ -6,6 +6,11 @@ from .resp_writer import ResponseWriter
 from ..content_type import content_type_manager
 
 
+__all__ = ['Handler', 'FuncHandler', 'RedirectHandler', 
+           'FileServerHandler', 
+           'HelloNezhaHandler', 'HelloWorldHandler']
+
+
 class Handler:
     def serve_http(self, response_writer :ResponseWriter, request :Request):
         pass
@@ -145,3 +150,19 @@ class FileServerHandler(Handler):
             ) for p, n in items.items()]
 
         return '<br/>'.join(hitems)
+
+
+class HelloWorldHandler(Handler):
+    def serve_http(self, w :ResponseWriter, _):
+        w.send_respone(200)
+        w.send_header({'content-type': 'text/html'})
+
+        w.write('Hello World!')
+
+
+class HelloNezhaHandler(Handler):
+    def serve_http(self, w :ResponseWriter, _):
+        w.send_respone(200)
+        w.send_header({'content-type': 'text/html'})
+
+        w.write('Hello Nezha!')

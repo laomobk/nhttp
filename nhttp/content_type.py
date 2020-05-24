@@ -1,4 +1,7 @@
 
+__all__ = ['ContentType', 'content_type_manager']
+
+
 class ContentType:
     def __init__(self, type_ :str, subtype :str, parameter :str=''):
         self.type = type_

@@ -3,6 +3,9 @@ from urllib.parse import unquote
 from http.server import BaseHTTPRequestHandler
 
 
+__all__ = ['Request']
+
+
 class Request:
     def __init__(self, handler :BaseHTTPRequestHandler, method :str):
         self.__base_handler = handler

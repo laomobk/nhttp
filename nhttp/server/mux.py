@@ -8,6 +8,10 @@ from .handler import Handler, FuncHandler, RedirectHandler
 
 from ..exceptions import MultipleRegistrationException
 
+
+__all__ = ['MuxEntry', 'ServerMux']
+
+
 class MuxEntry:
     def __init__(self, pattern :str, handler :Handler):
         self.pattern = pattern

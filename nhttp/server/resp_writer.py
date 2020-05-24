@@ -1,6 +1,9 @@
 from http.server import BaseHTTPRequestHandler
 
 
+__all__ = ['ResponseWriter']
+
+
 class ResponseWriter:
     def __init__(self, handler :BaseHTTPRequestHandler):
         self.__base_handler = handler
