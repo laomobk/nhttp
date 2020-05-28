@@ -10,10 +10,10 @@ class ContentType:
 
     def __str__(self):
         return '%s/%s %s' % (self.type, self.subtype, 
-                             ';%s' % (parameter))
+                             ';%s' % (self.parameter))
 
     def __repr__(self) -> str:
-        return 'ContentType(%s, %s, %s)' % (self.type, self.subtype, self.parameter)
+        return 'ContentType(\'%s\', \'%s\', \'%s\')' % (self.type, self.subtype, self.parameter)
 
 
 class __ContentTypeManager:
@@ -39,3 +39,9 @@ class __ContentTypeManager:
 
 
 content_type_manager = __ContentTypeManager()
+
+
+if __name__ == '__main__':
+    ct = ContentType('text', 'html', 'charest=utf8')
+    print(str(ct))
+    print(repr(ct))
