@@ -28,4 +28,4 @@ def rrr(w, _):
     print('/a/b')
 
 
-listen_and_service(':5013')
+listen_and_service(':5013', True)

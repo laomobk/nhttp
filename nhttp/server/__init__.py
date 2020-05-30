@@ -1,3 +1,5 @@
+import socketserver
+import selectors
 
 from .server import NHTTPThreadingHTTPServer
 from .mux import ServerMux, MuxEntry
@@ -28,7 +30,25 @@ def handle(pattern :str):
     return wrapper
 
 
-def listen_and_service(address :str):
+def listen_and_service(address :str, use_epoll=False):
+    """Listen and service requests.
+
+    parse request and call handler to deal with.
+
+    :param use_epoll    use selectors.EpollSelector instead of 
+                        default socketserver._ServerSelector
+                        (PollSelector or SelectSelector).
+                        Available only in a environment supporting 
+                        epoll like Linux.
+    
+    (Attention!) use epoll selector may cause unpredictable exception.
+                 it just a experimental features, and it is unstable.
+
+    """
+
+    if use_epoll and hasattr(selectors, 'EpollSelector'):
+        socketserver._ServerSelector = selectors.EpollSelector
+
     try:
         ip, port = address.split(':', 1)
 
