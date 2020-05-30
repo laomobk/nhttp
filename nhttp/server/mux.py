@@ -62,9 +62,9 @@ class ServerMux(BaseHTTPRequestHandler):
             if not self.__is_match(k, path):
                 continue
 
-        if max_length < len(k):
-            max_length = len(k)
-            target_handler = v.handler
+            if max_length < len(k):
+                max_length = len(k)
+                target_handler = v.handler
 
         return target_handler
 
@@ -96,3 +96,11 @@ class ServerMux(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.__do_request('POST')
+    
+    '''
+    def log_error(self, format, *args):
+        pass
+
+    def log_message(self, format, *args):
+        pass
+    '''

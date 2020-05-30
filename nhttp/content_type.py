@@ -1,3 +1,5 @@
+from .content_type_table import CONTENT_TYPE_DICT
+
 
 __all__ = ['ContentType', 'content_type_manager']
 
@@ -8,31 +10,36 @@ class ContentType:
         self.subtype = subtype
         self.parameter = parameter
 
+    @staticmethod
+    def new_from_str(content_str :str):
+        try:
+            t, st = content_str.split('/', 1)
+            nst = content_str.replace(' ', '', 1)
+            _, *p = nst.split(';', 1)
+            
+            p = p[0] if p else ''
+
+            return ContentType(t, st, p)
+
+        except ValueError:
+            return None
+
     def __str__(self):
         return '%s/%s %s' % (self.type, self.subtype, 
-                             ';%s' % (self.parameter))
+                             ';%s' % (self.parameter) if self.parameter else '')
 
     def __repr__(self) -> str:
         return 'ContentType(\'%s\', \'%s\', \'%s\')' % (self.type, self.subtype, self.parameter)
 
 
 class __ContentTypeManager:
-    __TYPE_MAP = {
-        ('.js',): ContentType('application', 'javascript'),
-        ('.htm', '.html'): ContentType('text', 'html'),
-        ('.css',): ContentType('text', 'css'),
-    }
-
-    __ANY_CONTENT_TYPE = ContentType('*', '*')
+    __BIN_CONTENT_TYPE = ContentType('application', 'octet-stream')
 
     def get(self, fext :str) -> ContentType:
-        for ext, ct in self.__TYPE_MAP.items():
-            if ext == fext:
-                return ct
-        return self.__ANY_CONTENT_TYPE
+        return ContentType.new_from_str(CONTENT_TYPE_DICT.get(fext, CONTENT_TYPE_DICT['.*']))
 
-    def get_type_with_parameter(self, k, parameter :str) -> ContentType:
-        t = self.__getitem__(k)
+    def get_type_with_parameter(self, fext, parameter :str) -> ContentType:
+        t = self.get(fext)
         t.parameter = parameter
 
         return t
@@ -42,6 +49,7 @@ content_type_manager = __ContentTypeManager()
 
 
 if __name__ == '__main__':
-    ct = ContentType('text', 'html', 'charest=utf8')
+    ct = content_type_manager.get('.jpg')
+
     print(str(ct))
     print(repr(ct))

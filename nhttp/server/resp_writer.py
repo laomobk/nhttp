@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler
+from .headers import NORMAL_HTTP_HEADERS
 
 
 __all__ = ['ResponseWriter']
@@ -7,6 +8,7 @@ __all__ = ['ResponseWriter']
 class ResponseWriter:
     def __init__(self, handler :BaseHTTPRequestHandler):
         self.__base_handler = handler
+        self.__headers = NORMAL_HTTP_HEADERS
 
     @property
     def resp_file(self):
@@ -16,12 +18,19 @@ class ResponseWriter:
     def _base_handler(self):
         return self.__base_handler
 
+    @property
+    def headers(self) -> dict:
+        return self.__headers
+
     def send_respone(self, code :int):
         self.__base_handler.send_response(code)
 
     def send_header(self, kw_dict :dict):
-        for k, v in kw_dict.items():
+        self.__headers.update(kw_dict)
+
+        for k, v in self.__headers.items():
             self.__base_handler.send_header(k, v)
+
         self.__base_handler.end_headers()
 
     def send_error(self, code :int, message :str=''):
