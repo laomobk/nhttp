@@ -23,6 +23,14 @@ class ResponseWriter:
         return self.__headers
 
     def send_respone(self, code :int):
+        """
+        (Attention!) This method is not use any more!
+        (Attention!) Use send_response instead.
+        """
+
+        self.__base_handler.send_response(code)
+
+    def send_response(self, code :int):
         self.__base_handler.send_response(code)
 
     def send_header(self, kw_dict :dict):
