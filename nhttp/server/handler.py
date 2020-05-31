@@ -1,4 +1,5 @@
 import os
+import shutil
 from urllib.parse import quote, unquote
 
 from .req_info import Request
@@ -120,12 +121,15 @@ class FileServerHandler(Handler):
         w.write_bytes(html_source)
 
     def __handle_file(self, w :ResponseWriter, rpath :str):
-        w.send_respone(200)
-        w.send_header({'content-type': self.__get_content_type(rpath)})
-        w.write_bytes(self.__make_file_content(rpath))
+        fb = open(rpath, 'rb').read()
+        fsize = len(fb)
 
-    def __make_file_content(self, path :str) -> bytes:
-        return open(path, 'rb').read()
+        w.send_respone(200)
+
+        w.send_header({'content-type': self.__get_content_type(rpath),
+                       'content-length': fsize})
+
+        w.write_bytes(fb)
 
     def __make_dir_content(self, path :str) -> str:
         items = {}

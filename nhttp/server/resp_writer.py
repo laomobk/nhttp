@@ -8,7 +8,7 @@ __all__ = ['ResponseWriter']
 class ResponseWriter:
     def __init__(self, handler :BaseHTTPRequestHandler):
         self.__base_handler = handler
-        self.__headers = NORMAL_HTTP_HEADERS
+        self.__base_headers = NORMAL_HTTP_HEADERS
 
     @property
     def resp_file(self):
@@ -19,7 +19,7 @@ class ResponseWriter:
         return self.__base_handler
 
     @property
-    def headers(self) -> dict:
+    def base_headers(self) -> dict:
         return self.__headers
 
     def send_respone(self, code :int):
@@ -34,9 +34,10 @@ class ResponseWriter:
         self.__base_handler.send_response(code)
 
     def send_header(self, kw_dict :dict):
-        self.__headers.update(kw_dict)
+        h = self.__base_headers.copy()
+        h.update(kw_dict)
 
-        for k, v in self.__headers.items():
+        for k, v in h.items():
             self.__base_handler.send_header(k, v)
 
         self.__base_handler.end_headers()
