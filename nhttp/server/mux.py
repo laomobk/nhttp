@@ -1,4 +1,5 @@
 import threading
+import sys
 
 from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler
 
@@ -7,6 +8,7 @@ from .req_info import Request
 from .handler import Handler, FuncHandler, RedirectHandler
 
 from ..exceptions import MultipleRegistrationException
+from .._internal import color
 
 
 __all__ = ['MuxEntry', 'ServerMux']
@@ -96,11 +98,16 @@ class ServerMux(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.__do_request('POST')
-    
-    '''
-    def log_error(self, format, *args):
-        pass
 
+    def do_HEAD(self):
+        self.__do_request('HEAD')
+    
     def log_message(self, format, *args):
-        pass
-    '''
+        sys.stderr.write('[%s%s] %s -> [%s] %s\n' % 
+                         (
+                             color.color('N', color.COLOR_TX_RED),
+                             color.color('HTTP', color.COLOR_TX_YELLOW),
+                             self.address_string(),
+                             self.log_date_time_string(),
+                             color.color(format % args, color.COLOR_TX_CYAN)
+                         ))

@@ -59,12 +59,7 @@ def listen_and_service(address :str, use_epoll=False):
     
     __http_server = NHTTPThreadingHTTPServer(addr, __mux)
 
-    print('Serve HTTP at (%s : %s)' % addr)
-    
-    try:
-        __http_server.serve_forever()
-    except KeyboardInterrupt:
-        print('Keyboard interrupt')
+    __http_server.serve_forever()
 
 
 __all__ = [

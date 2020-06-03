@@ -4,7 +4,7 @@ from urllib.parse import quote, unquote
 
 from .req_info import Request
 from .resp_writer import ResponseWriter
-from ..content_type import content_type_manager
+from ..constant.content_type import content_type_manager
 
 
 __all__ = ['Handler', 'FuncHandler', 'RedirectHandler', 

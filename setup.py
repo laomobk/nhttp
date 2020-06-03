@@ -6,5 +6,6 @@ setup(
     version='1.1build',
     description='A portable http server package',
     author='LaomoBK',
-    packages=['nhttp', 'nhttp.server']
+    packages=['nhttp', 'nhttp.server', 'nhttp.constant',
+              'nhttp._internal']
 )
