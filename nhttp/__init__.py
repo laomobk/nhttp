@@ -1,5 +1,5 @@
 
 __author__ = 'LaomoBK'
 
-version = (1, 0)
-version_tail = 'release'
+version = (1, 3)
+version_tail = 'build'

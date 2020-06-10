@@ -6,6 +6,8 @@ from .mux import ServerMux, MuxEntry
 from .resp_writer import ResponseWriter
 from .req_info import Request
 from .handler import Handler
+from .pretty import PrettyFuncHandler
+
 
 __mux = ServerMux
 __http_server = None
@@ -26,6 +28,17 @@ def handle(pattern :str):
 
     def wrapper(func):
         set_handle_func(pattern, func)
+        return func
+    return wrapper
+
+
+def pretty_handle(pattern :str):
+    """
+    Used as a descriptor
+    """
+
+    def wrapper(func):
+        set_handler(pattern, PrettyFuncHandler(func))
         return func
     return wrapper
 
@@ -65,6 +78,7 @@ def listen_and_service(address :str, use_epoll=False):
 __all__ = [
             'listen_and_service',
             'handle',
+            'pretty_handle',
             'set_handler',
             'set_handle_func',
 
