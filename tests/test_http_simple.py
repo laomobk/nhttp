@@ -7,4 +7,4 @@ def handle_root(w :ResponseWriter, _):
     w.write('Hello Nezha')
 
 
-listen_and_service(':5013')
+listen_and_service(':5013', True)

@@ -10,12 +10,13 @@ DEFAULT_HEADERS = {'Content-Type': 'text/html'}
 
 class Response:
     def __init__(self, status_code=200, headers=None, 
-                 content_iter :Iterable=None):
+                 content_iter :Iterable=None, *plugins):
         self.__status_code = status_code
         self.__headers = headers \
                 if isinstance(headers, dict) else DEFAULT_HEADERS.copy()
         self.__content_iter = content_iter \
                 if self.__check_iterable(content_iter) else tuple()
+        self.__plugins = set(plugins)
 
     @property
     def status_code(self) -> int:
@@ -47,8 +48,17 @@ class Response:
             raise TypeError('Content iter must be a iterable object')
         self.__content_iter = iter
 
+    @property
+    def plugins(self) -> set:
+        return self.__plugins
+
     def __check_iterable(self, o) -> bool:
         return hasattr(o, '__iter__')
+
+
+class LovelyPlugin:
+    def run(self, response :Response):
+        pass
 
 
 class LovelyFuncHandler(Handler):
@@ -60,6 +70,10 @@ class LovelyFuncHandler(Handler):
 
         if not isinstance(resp, Response):
             raise TypeError('handler must return a Response object')
+
+        # run plugins first
+        for plu in resp.plugins:
+            plu.run(resp)
 
         response_writer.send_response(resp.status_code)
         response_writer.send_header(resp.headers)

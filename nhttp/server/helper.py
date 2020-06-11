@@ -1,12 +1,14 @@
-from .req_info import Request
+from os.path import getsize
+
+from .lovely import LovelyPlugin, Response
+from ..constant.content_type_table import CONTENT_TYPE_DICT
 
 
-class RequestInfoHelper:
-    @staticmethod
-    def read_content_safe(req :Request) -> bytes:
-        l = req.get_header('content-length')
-        
-        if l is None:
-            return b''
-        
-        return req.request_file.read(l)
+def iter_file(f, chunk_size=-1) -> bytes:
+    while True:
+        b = f.read(chunk_size)
+    
+        if not b:
+            break
+
+        yield b
